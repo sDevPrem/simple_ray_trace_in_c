@@ -19,7 +19,24 @@ int main()
 
     SDL_UpdateWindowSurface(window);
 
-    waitWindow();
+    int simulation_running = 1;
+    SDL_Event event;
+
+    while(simulation_running) {
+        while(SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                simulation_running = 0;
+            } else if(event.type == SDL_MOUSEMOTION && event.motion.state != 0) {
+                circle.x = event.motion.x;
+                circle.y = event.motion.y;
+            }
+        }
+        fillCircle(surface,circle, COLOR_WHITE);
+        SDL_UpdateWindowSurface(window);
+        SDL_Delay(10);
+    }
+
+    // waitWindow();
 }
 
 void waitWindow() {
