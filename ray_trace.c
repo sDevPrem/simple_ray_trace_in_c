@@ -5,6 +5,7 @@
 #define WIDTH 900
 #define HEIGHT 600
 #define COLOR_WHITE 0xffffffff
+#define COLOR_BLACK 0x000000
 
 void waitWindow();
 
@@ -14,6 +15,7 @@ int main()
     SDL_Window *window = SDL_CreateWindow("Raytracing", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Surface* surface = SDL_GetWindowSurface(window);
 
+    SDL_Rect eraseRect = {0, 0, WIDTH, HEIGHT};
     struct Circle circle = {200,200,100};
     fillCircle(surface,circle, COLOR_WHITE);
 
@@ -31,6 +33,7 @@ int main()
                 circle.y = event.motion.y;
             }
         }
+        SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
         fillCircle(surface,circle, COLOR_WHITE);
         SDL_UpdateWindowSurface(window);
         SDL_Delay(10);
