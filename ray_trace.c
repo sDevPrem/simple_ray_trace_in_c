@@ -17,6 +17,7 @@ int main()
 
     SDL_Rect eraseRect = {0, 0, WIDTH, HEIGHT};
     Circle circle = {200,200,100};
+    Circle shadowCircle = {700,300, 140};
     fillCircle(surface,circle, COLOR_WHITE);
 
     SDL_UpdateWindowSurface(window);
@@ -35,6 +36,7 @@ int main()
         }
         SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
         fillCircle(surface,circle, COLOR_WHITE);
+        fillCircle(surface,shadowCircle, COLOR_WHITE);
         SDL_UpdateWindowSurface(window);
         SDL_Delay(10);
     }
