@@ -16,7 +16,7 @@ int main()
     SDL_Surface* surface = SDL_GetWindowSurface(window);
 
     SDL_Rect eraseRect = {0, 0, WIDTH, HEIGHT};
-    struct Circle circle = {200,200,100};
+    Circle circle = {200,200,100};
     fillCircle(surface,circle, COLOR_WHITE);
 
     SDL_UpdateWindowSurface(window);

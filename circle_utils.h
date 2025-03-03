@@ -3,11 +3,11 @@
 
 #include <SDL2/SDL.h>
 
-struct Circle {
+typedef struct Circle {
     double x;
     double y;
     double r;
-};
+} Circle;
 
 void fillCircle(SDL_Surface* surface, struct Circle circle, Uint32 color);
 
