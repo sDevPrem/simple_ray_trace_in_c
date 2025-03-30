@@ -29,31 +29,44 @@ int main()
     SDL_Rect eraseRect = {0, 0, WIDTH, HEIGHT};
     Circle circle = {200,200,100};
     Circle shadowCircle = {700,300, 140};
+    struct Ray rays[RAYS_NUMBER];
+    
     fillCircle(surface,circle, COLOR_WHITE);
-
+    fillCircle(surface,shadowCircle, COLOR_WHITE);
+    generateRays(circle,rays);
+    fillRays(surface,rays,COLOR_WHITE);
     SDL_UpdateWindowSurface(window);
 
-    struct Ray rays[RAYS_NUMBER];
 
     int simulation_running = 1;
     SDL_Event event;
 
     while(simulation_running) {
+        int newX, newY = 0;
         while(SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 simulation_running = 0;
             } else if(event.type == SDL_MOUSEMOTION && event.motion.state != 0) {
-                circle.x = event.motion.x;
-                circle.y = event.motion.y;
+                newX = event.motion.x;
+                newY = event.motion.y;
             }
         }
-        SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
-        fillCircle(surface,circle, COLOR_WHITE);
-        fillCircle(surface,shadowCircle, COLOR_WHITE);
-        generateRays(circle,rays);
-        fillRays(surface,rays,COLOR_WHITE);
-        SDL_UpdateWindowSurface(window);
-        SDL_Delay(10);
+
+        if(newX != 0 && newY != 0 && circle.x != newX && circle.y != newY) {
+            circle.x = newX;
+            circle.y = newY;
+
+            SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
+
+            fillCircle(surface,circle, COLOR_WHITE);
+            fillCircle(surface,shadowCircle, COLOR_WHITE);
+
+            generateRays(circle,rays);
+            fillRays(surface,rays,COLOR_WHITE);
+
+            SDL_UpdateWindowSurface(window);
+            SDL_Delay(10);
+        }
     }
 
     // waitWindow();
@@ -91,14 +104,12 @@ void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColo
         double x_draw = ray.x_start;
         double y_draw = ray.y_start;
         int endOfTheScreen = 0;
-        double step = 1;
+        int objectHit = 0;
+        double step = 0.3;
 
-        printf("filling rays %d\n", i);
-        while(!endOfTheScreen) {
+        while(!endOfTheScreen && !objectHit) {
             x_draw += step * cos(ray.angle);
             y_draw += step * sin(ray.angle);
-
-            printf("filling rays inside %.2f\n", step);
 
             SDL_Rect pixel = (SDL_Rect) {x_draw,y_draw,1,1};
             SDL_FillRect(surface,&pixel,rayColor);
@@ -106,7 +117,7 @@ void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColo
             if(x_draw < 0 || x_draw > WIDTH || y_draw < 0  || y_draw > HEIGHT) {
                 endOfTheScreen = 1;
             }
-            step++;
+            step += 0.1;
         }
     }
 }
