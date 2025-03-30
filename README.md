@@ -6,6 +6,9 @@
 ## Reference
 https://youtu.be/2BLRLuczykM?si=6m5ffWuxGBVcr3OV
 
+## Build With
+*   [SDL2](https://www.libsdl.org/) - A cross-platform development library that provides low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.
+
 ## To compile
 
 ```bash
