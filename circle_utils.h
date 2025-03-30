@@ -10,5 +10,6 @@ typedef struct Circle {
 } Circle;
 
 void fillCircle(SDL_Surface* surface, struct Circle circle, Uint32 color);
+int isPointInsideCircle(int x, int y, struct Circle circle);
 
 #endif // CIRCLE_UTILS_H
