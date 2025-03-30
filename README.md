@@ -10,7 +10,7 @@ https://youtu.be/2BLRLuczykM?si=6m5ffWuxGBVcr3OV
 
 ```bash
 //mac
-SDL_PATH=/opt/homebrew
+SDL_PATH=/opt/homebrew // Replace with the actual path
 gcc -o ray_trace ray_trace.c circle_utils.c -lSDL2 -lm -I${SDL_PATH}/include -D_THREAD_SAFE -L/${SDL_PATH}/lib
 
 //windows
