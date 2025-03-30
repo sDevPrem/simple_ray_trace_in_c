@@ -30,6 +30,8 @@ int main()
     Circle circle = {200,200,100};
     Circle shadowCircle = {700,300, 140};
     struct Ray rays[RAYS_NUMBER];
+
+    int obstacleSpeed = 1;
     
     fillCircle(surface,circle, COLOR_WHITE);
     fillCircle(surface,shadowCircle, COLOR_WHITE);
@@ -37,36 +39,34 @@ int main()
     fillRays(surface,rays,COLOR_WHITE,shadowCircle);
     SDL_UpdateWindowSurface(window);
 
-
     int simulation_running = 1;
     SDL_Event event;
 
     while(simulation_running) {
-        int newX, newY = 0;
         while(SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 simulation_running = 0;
             } else if(event.type == SDL_MOUSEMOTION && event.motion.state != 0) {
-                newX = event.motion.x;
-                newY = event.motion.y;
+                circle.x = event.motion.x;
+                circle.y = event.motion.y;
             }
         }
 
-        if(newX != 0 && newY != 0 && circle.x != newX && circle.y != newY) {
-            circle.x = newX;
-            circle.y = newY;
+        SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
 
-            SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
+        fillCircle(surface,circle, COLOR_WHITE);
+        fillCircle(surface,shadowCircle, COLOR_WHITE);
 
-            fillCircle(surface,circle, COLOR_WHITE);
-            fillCircle(surface,shadowCircle, COLOR_WHITE);
+        generateRays(circle,rays);
+        fillRays(surface,rays,COLOR_WHITE,shadowCircle);
 
-            generateRays(circle,rays);
-            fillRays(surface,rays,COLOR_WHITE,shadowCircle);
+        SDL_UpdateWindowSurface(window);
 
-            SDL_UpdateWindowSurface(window);
-            SDL_Delay(10);
+        shadowCircle.y += obstacleSpeed;
+        if(shadowCircle.y - shadowCircle.r < 0 || shadowCircle.y + shadowCircle.r > HEIGHT) {
+            obstacleSpeed = -obstacleSpeed;
         }
+        SDL_Delay(10);
     }
 
     // waitWindow();
