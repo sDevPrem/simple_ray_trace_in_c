@@ -6,8 +6,10 @@
 #define HEIGHT 600
 #define COLOR_WHITE 0xffffffff
 #define COLOR_BLACK 0x000000
-#define RAYS_NUMBER 500
+#define RAYS_NUMBER 400
 #define COLOR_RAY 0xffd43b
+#define COLOR_RAY_BLUR 0xebdaa0
+#define RAY_THICKNESS 1
 
 struct Ray
 {
@@ -18,7 +20,7 @@ struct Ray
 
 void waitWindow();
 void generateRays(Circle circle, struct Ray rays[RAYS_NUMBER]);
-void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor, struct Circle object);
+void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor, Uint32 blurRayColor, struct Circle object);
 
 
 int main()
@@ -37,7 +39,7 @@ int main()
     fillCircle(surface,circle, COLOR_WHITE);
     fillCircle(surface,shadowCircle, COLOR_WHITE);
     generateRays(circle,rays);
-    fillRays(surface,rays,COLOR_WHITE,shadowCircle);
+    fillRays(surface,rays,COLOR_WHITE,COLOR_RAY_BLUR,shadowCircle);
     SDL_UpdateWindowSurface(window);
 
     int simulation_running = 1;
@@ -56,7 +58,7 @@ int main()
         SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
 
         generateRays(circle,rays);
-        fillRays(surface,rays,COLOR_RAY,shadowCircle);
+        fillRays(surface,rays,COLOR_RAY,COLOR_RAY_BLUR,shadowCircle);
         fillCircle(surface,circle, COLOR_WHITE);
         fillCircle(surface,shadowCircle, COLOR_WHITE);
 
@@ -99,7 +101,7 @@ void generateRays(Circle circle, struct Ray rays[RAYS_NUMBER])
     
 }
 
-void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor, struct Circle object) {
+void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor, Uint32 blurRayColor, struct Circle object) {
     for(int i = 0; i <= RAYS_NUMBER; i++) { 
         struct Ray ray = rays[i];
         double x_draw = ray.x_start;
@@ -109,7 +111,11 @@ void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColo
         double step = 1;
 
         while(!endOfTheScreen && !objectHit) {
-            SDL_Rect pixel = (SDL_Rect) {x_draw,y_draw,1,1};
+            double blurRayThickness = 1.5 * RAY_THICKNESS;
+            SDL_Rect pixel = (SDL_Rect) {x_draw,y_draw,RAY_THICKNESS,RAY_THICKNESS};
+            SDL_Rect blur_pixel = (SDL_Rect) {x_draw,y_draw,blurRayThickness,blurRayThickness};
+
+            SDL_FillRect(surface,&blur_pixel,blurRayColor);
             SDL_FillRect(surface,&pixel,rayColor);
 
             x_draw += step * cos(ray.angle);
