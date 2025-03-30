@@ -2,11 +2,12 @@
 #include <math.h>
 #include "circle_utils.h"
 
-#define WIDTH 900
+#define WIDTH 1200
 #define HEIGHT 600
 #define COLOR_WHITE 0xffffffff
 #define COLOR_BLACK 0x000000
-#define RAYS_NUMBER 200
+#define RAYS_NUMBER 500
+#define COLOR_RAY 0xffd43b
 
 struct Ray
 {
@@ -27,8 +28,8 @@ int main()
     SDL_Surface* surface = SDL_GetWindowSurface(window);
 
     SDL_Rect eraseRect = {0, 0, WIDTH, HEIGHT};
-    Circle circle = {200,200,100};
-    Circle shadowCircle = {700,300, 140};
+    Circle circle = {200,200,40};
+    Circle shadowCircle = {550,300, 140};
     struct Ray rays[RAYS_NUMBER];
 
     int obstacleSpeed = 1;
@@ -54,11 +55,11 @@ int main()
 
         SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
 
+        generateRays(circle,rays);
+        fillRays(surface,rays,COLOR_RAY,shadowCircle);
         fillCircle(surface,circle, COLOR_WHITE);
         fillCircle(surface,shadowCircle, COLOR_WHITE);
 
-        generateRays(circle,rays);
-        fillRays(surface,rays,COLOR_WHITE,shadowCircle);
 
         SDL_UpdateWindowSurface(window);
 
