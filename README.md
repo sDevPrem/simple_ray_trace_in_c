@@ -1,5 +1,7 @@
 # Simple Ray Tracing In 
 
+A simple 2D ray tracing simulation using SDL2, where rays emanate from a draggable circle and interact with a static circle, creating a visual effect of shadows and light.
+
 ## Preview
 [Preview](https://github.com/user-attachments/assets/ed6cec3e-7728-4d23-9d32-43ca1ccd6c95)
 
