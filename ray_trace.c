@@ -6,8 +6,19 @@
 #define HEIGHT 600
 #define COLOR_WHITE 0xffffffff
 #define COLOR_BLACK 0x000000
+#define RAYS_NUMBER 100
+
+struct Ray
+{
+    double x_start, y_start;
+    double angle;
+};
+
 
 void waitWindow();
+void generateRays(Circle circle, struct Ray rays[RAYS_NUMBER]);
+void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor);
+
 
 int main()
 {
@@ -21,6 +32,8 @@ int main()
     fillCircle(surface,circle, COLOR_WHITE);
 
     SDL_UpdateWindowSurface(window);
+
+    struct Ray rays[RAYS_NUMBER];
 
     int simulation_running = 1;
     SDL_Event event;
@@ -37,6 +50,8 @@ int main()
         SDL_FillRect(surface,&eraseRect,COLOR_BLACK);
         fillCircle(surface,circle, COLOR_WHITE);
         fillCircle(surface,shadowCircle, COLOR_WHITE);
+        generateRays(circle,rays);
+        fillRays(surface,rays,COLOR_WHITE);
         SDL_UpdateWindowSurface(window);
         SDL_Delay(10);
     }
@@ -55,6 +70,43 @@ void waitWindow() {
             {
                 quit = 1;
             }
+        }
+    }
+}
+
+void generateRays(Circle circle, struct Ray rays[RAYS_NUMBER])
+{
+    for(int i = 0; i <= RAYS_NUMBER; i++) {
+        double angle = ((double) i/RAYS_NUMBER) * 2 * M_PI;
+        struct Ray ray = { circle.x, circle.y, angle };
+        rays[i] = ray;
+    }
+    
+    
+}
+
+void fillRays(SDL_Surface* surface, struct Ray rays[RAYS_NUMBER], Uint32 rayColor) {
+    for(int i = 0; i <= RAYS_NUMBER; i++) { 
+        struct Ray ray = rays[i];
+        double x_draw = ray.x_start;
+        double y_draw = ray.y_start;
+        int endOfTheScreen = 0;
+        double step = 1;
+
+        printf("filling rays %d\n", i);
+        while(!endOfTheScreen) {
+            x_draw += step * cos(ray.angle);
+            y_draw += step * sin(ray.angle);
+
+            printf("filling rays inside %.2f\n", step);
+
+            SDL_Rect pixel = (SDL_Rect) {x_draw,y_draw,1,1};
+            SDL_FillRect(surface,&pixel,rayColor);
+
+            if(x_draw < 0 || x_draw > WIDTH || y_draw < 0  || y_draw > HEIGHT) {
+                endOfTheScreen = 1;
+            }
+            step++;
         }
     }
 }
