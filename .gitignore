@@ -1,2 +1,9 @@
 ray_trace
 tempCodeRunnerFile.c
+ray_trace
+*.o
+*~
+\#*
+.DS_Store
+.vscode/
+*.log
